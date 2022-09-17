@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
-function App() {
+function Input({ render }) {
+  const [value, setValue] = useState("");
+  const valueToUse = value.trim() === "" ? 0 : parseFloat(value);
+
+  return (
+    <>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Temp in °C"
+      />
+      {render(valueToUse)}
+    </>
+  );
+}
+
+export default function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Temperature Converter</h1>
+      <Input
+        render={(valueToUse) => (
+          <>
+            <Kelvin value={valueToUse} />
+            <Fahrenheit value={valueToUse} />
+          </>
+        )}
+      />
     </div>
   );
 }
 
-export default App;
+function Kelvin({ value = 0 }) {
+  return <div>{value + 273.15}K</div>;
+}
+
+function Fahrenheit({ value = 0 }) {
+  return <div>{(value * 9) / 5 + 32}°F</div>;
+}
